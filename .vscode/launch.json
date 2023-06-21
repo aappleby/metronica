@@ -1,0 +1,12 @@
+{
+  "configurations": [
+    {
+      "name": "Metronica",
+      "preLaunchTask": "build_all",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/MetronicaApp",
+      "cwd": "${workspaceFolder}",
+    },
+  ]
+}
