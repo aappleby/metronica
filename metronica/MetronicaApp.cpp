@@ -3,11 +3,14 @@
 #include "metronica/MetroBoySPU2.h"
 
 #include "metrolib/appbase/AppHost.h"
-#include "metrolib/audio/Audio.h"
 #include "metrolib/appbase/GLBase.h"
+#include "metrolib/audio/Audio.h"
+#include "metrolib/core/Blobs.h"
 #include "metrolib/core/Constants.h"
-#include "metrolib/core/Dumper.h" // for StringDumper
+#include "metrolib/core/Dumper.h"
+#include "metrolib/core/File.h"
 #include "metrolib/core/Tests.h"
+#include "metrolib/gameboy/MetroBoyCPU.h"
 
 #define SDL_MAIN_HANDLED
 #ifdef _MSC_VER
@@ -24,6 +27,8 @@ uint64_t phases_per_second = 114 * 154 * 60 * 8; // 8426880
 //uint64_t phases_per_second_adapt = phases_per_second;
 const uint64_t gb_phase_total = 46880727;
 
+constexpr int64_t input_hz = 154 * 114 * 60;
+
 //-----------------------------------------------------------------------------
 
 int main(int argc, char** argv) {
@@ -35,6 +40,9 @@ int main(int argc, char** argv) {
   AppHost* app_host = new AppHost(app);
   int ret = app_host->app_main(argc, argv);
   delete app;
+
+  LOG("Done\n");
+
   return ret;
 }
 
@@ -49,7 +57,7 @@ struct MusicEvent {
 std::vector<MusicEvent> music;
 int music_cursor = 0;
 
-//MetroBoySPU2 spu2;
+MetroBoySPU2 spu2;
 
 void MetronicaApp::app_init(int screen_w, int screen_h) {
   dvec2 screen_size(screen_w, screen_h);
@@ -88,8 +96,6 @@ void MetronicaApp::app_init(int screen_w, int screen_h) {
 
   grid_painter.init(65536, 65536);
   text_painter.init();
-  //dump_painter.init_ascii();
-  //gb_blitter.init();
   blitter.init();
 
   ram_tex = create_texture_u8(256, 256, nullptr, false);
@@ -184,9 +190,9 @@ void MetronicaApp::app_update(dvec2 screen_size, double delta) {
         music_cursor++;
       }
 
-      //spu2.tick(false, req.addr, (uint8_t)req.data, req.read, req.write);
-      //spu2.tock_out();
-      //audio_post(input_hz, spu2.out_l, spu2.out_r);
+      spu2.tick(false, req.addr, (uint8_t)req.data, req.read, req.write);
+      spu2.tock_out();
+      audio_post(input_hz, spu2.out_l, spu2.out_r);
     }
   }
 

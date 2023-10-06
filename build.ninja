@@ -9,32 +9,32 @@ build_mode   = -DCONFIG_DEBUG -O0
 
 default_gpp      = g++ -g -MMD -std=gnu++2a
 default_gcc      = gcc -g -MMD
-default_includes = -I. -Isymlinks -Isymlinks/MetroLib -Isymlinks/tree-sitter/lib/include
+default_includes = -I. -Isymlinks -Isymlinks/metrolib -Isymlinks/metron
 
 ################################################################################
 
-build obj/MetronicaApp.o        : compile_cpp src/Metronica/MetronicaApp.cpp
-build obj/glad/glad.o           : compile_cpp symlinks/MetroLib/metrolib/glad/glad.c
-build obj/imgui/imgui.o         : compile_cpp symlinks/imgui/imgui.cpp
-build obj/imgui/imgui_demo.o    : compile_cpp symlinks/imgui/imgui_demo.cpp
-build obj/imgui/imgui_draw.o    : compile_cpp symlinks/imgui/imgui_draw.cpp
-build obj/imgui/imgui_tables.o  : compile_cpp symlinks/imgui/imgui_tables.cpp
-build obj/imgui/imgui_widgets.o : compile_cpp symlinks/imgui/imgui_widgets.cpp
+build obj/metronica/MetronicaApp.o : compile_cpp metronica/MetronicaApp.cpp
+build obj/glad/glad.o              : compile_cpp symlinks/glad/glad.c
+build obj/imgui/imgui.o            : compile_cpp symlinks/imgui/imgui.cpp
+build obj/imgui/imgui_demo.o       : compile_cpp symlinks/imgui/imgui_demo.cpp
+build obj/imgui/imgui_draw.o       : compile_cpp symlinks/imgui/imgui_draw.cpp
+build obj/imgui/imgui_tables.o     : compile_cpp symlinks/imgui/imgui_tables.cpp
+build obj/imgui/imgui_widgets.o    : compile_cpp symlinks/imgui/imgui_widgets.cpp
 
-build obj/MetroLib : run_command
-  command = ninja -C symlinks/MetroLib
+build obj/metrolib : run_command
+  command = ninja -C symlinks/metrolib
 
 build bin/MetronicaApp : link $
-  obj/MetronicaApp.o $
+  obj/metronica/MetronicaApp.o $
   obj/glad/glad.o $
   obj/imgui/imgui.o $
   obj/imgui/imgui_demo.o $
   obj/imgui/imgui_draw.o $
   obj/imgui/imgui_tables.o $
   obj/imgui/imgui_widgets.o $
-  symlinks/MetroLib/bin/metrolib/libappbase.a $
-  symlinks/MetroLib/bin/metrolib/libaudio.a $
-  symlinks/MetroLib/bin/metrolib/libcore.a $
-  symlinks/MetroLib/bin/metrolib/libgameboy.a $
-  | obj/MetroLib
+  symlinks/metrolib/bin/metrolib/libappbase.a $
+  symlinks/metrolib/bin/metrolib/libaudio.a $
+  symlinks/metrolib/bin/metrolib/libcore.a $
+  symlinks/metrolib/bin/metrolib/libgameboy.a $
+  | obj/metrolib
   libs=-lSDL2

@@ -1,0 +1,5 @@
+.ninja_deps
+.ninja_log
+imgui.ini
+bin
+obj
