@@ -1,3 +1,12 @@
+#include <stdio.h>
+
+int main(int argc, char** argv) {
+  printf("Hello World\n");
+  return 0;
+}
+
+
+#if 0
 #include "metronica/MetronicaApp.h"
 
 #include "metronica/MetroBoySPU2.h"
@@ -284,3 +293,4 @@ void MetronicaApp::app_render_frame(dvec2 screen_size, double /*delta*/) {
 }
 
 //-----------------------------------------------------------------------------
+#endif

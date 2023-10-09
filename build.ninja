@@ -1,15 +1,13 @@
-include rules.ninja
+platform=X64
+target=DEBUG
+#target=RELEASE
 
-################################################################################
-# Config
+includes = ${includes} -Isymlinks/metrolib
 
-build_mode   = -DCONFIG_DEBUG -O0
-#build_mode   = -DCONFIG_RELEASE -O3
-#build_mode   = -DCONFIG_FASTMODE -O3
-
-default_gpp      = g++ -g -MMD -std=gnu++2a
-default_gcc      = gcc -g -MMD
-default_includes = -I. -Isymlinks -Isymlinks/metrolib -Isymlinks/metron
+include symlinks/metrolib/ninja/config_ALL.ninja
+include symlinks/metrolib/ninja/config_${platform}.ninja
+include symlinks/metrolib/ninja/config_${target}.ninja
+include symlinks/metrolib/ninja/rules.ninja
 
 ################################################################################
 
@@ -21,10 +19,15 @@ build obj/imgui/imgui_draw.o       : compile_cpp symlinks/imgui/imgui_draw.cpp
 build obj/imgui/imgui_tables.o     : compile_cpp symlinks/imgui/imgui_tables.cpp
 build obj/imgui/imgui_widgets.o    : compile_cpp symlinks/imgui/imgui_widgets.cpp
 
-build obj/metrolib : run_command
+build symlinks/metrolib/bin/metrolib/libappbase.a $
+      symlinks/metrolib/bin/metrolib/libaudio.a $
+      symlinks/metrolib/bin/metrolib/libcore.a $
+      symlinks/metrolib/bin/metrolib/libgameboy.a $
+      : run_command
   command = ninja -C symlinks/metrolib
 
-build bin/MetronicaApp : link $
+
+build bin/MetronicaApp : c_binary $
   obj/metronica/MetronicaApp.o $
   obj/glad/glad.o $
   obj/imgui/imgui.o $
@@ -35,6 +38,7 @@ build bin/MetronicaApp : link $
   symlinks/metrolib/bin/metrolib/libappbase.a $
   symlinks/metrolib/bin/metrolib/libaudio.a $
   symlinks/metrolib/bin/metrolib/libcore.a $
-  symlinks/metrolib/bin/metrolib/libgameboy.a $
-  | obj/metrolib
-  libs=-lSDL2
+  symlinks/metrolib/bin/metrolib/libgameboy.a
+  libraries=-lSDL2
+
+################################################################################
